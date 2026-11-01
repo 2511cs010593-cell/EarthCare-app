@@ -1,0 +1,214 @@
+================================================================================
+  EARTH CARE APP - WINDOWS QUICK START
+================================================================================
+
+STEP 1: INSTALL PREREQUISITES (One time only)
+================================================================================
+☐ Java 21
+  → Download: https://www.oracle.com/java/technologies/downloads/#java21
+  → Run installer (auto adds to PATH)
+  → Verify: java -version
+
+☐ Maven 3.9+
+  → Download: https://maven.apache.org/download.cgi
+  → Extract to: C:\Program Files\apache-maven-3.9.x
+  → Add MAVEN_HOME to Environment Variables
+  → Add bin folder to PATH
+  → Restart PowerShell
+  → Verify: mvn -version
+
+☐ MySQL 8.0+
+  → Download: https://dev.mysql.com/downloads/mysql/
+  → Run installer
+  → Remember your password
+  → MySQL auto-starts as Windows service
+
+☐ Node.js 20+ (comes with npm)
+  → Download: https://nodejs.org/
+  → Run installer
+  → Verify: node -version && npm -version
+
+================================================================================
+STEP 2: SETUP DATABASE (First time only)
+================================================================================
+1. Open Command Prompt (cmd.exe) - NOT PowerShell
+2. Login to MySQL:
+   cmd> mysql -u root -p
+   (Enter your MySQL password)
+
+3. Create database:
+   mysql> CREATE DATABASE earthcare_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+   mysql> EXIT;
+
+4. Load sample data:
+   cmd> mysql -u root -p earthcare_db < backend/src/main/resources/db/init.sql
+   (Enter your MySQL password)
+   (Wait for completion)
+
+5. Verify:
+   cmd> mysql -u root -p earthcare_db
+   mysql> SHOW TABLES;
+   (Should show 23 tables)
+   mysql> EXIT;
+
+================================================================================
+STEP 3: UPDATE BACKEND CONFIG (First time only)
+================================================================================
+1. Open: backend\src\main\resources\application.properties
+2. Find line ~5: spring.datasource.password=root
+3. Replace "root" with your MySQL password (if you set one)
+4. Save file
+
+================================================================================
+STEP 4: RUN BACKEND (Every time - Terminal 1)
+================================================================================
+1. Open PowerShell
+2. Navigate:
+   PS> cd C:\Users\Niharika\Desktop\AD
+   PS> cd backend
+
+3. Build (first time takes 3-5 min):
+   PS> mvn clean install
+
+4. Run:
+   PS> mvn spring-boot:run
+
+5. Wait for message:
+   "Started EarthCareApplication in X.XXX seconds"
+
+✅ Backend ready at: http://localhost:8080
+
+⚠️  KEEP THIS WINDOW OPEN!
+
+================================================================================
+STEP 5: RUN FRONTEND (Every time - Terminal 2, new window)
+================================================================================
+1. Open NEW PowerShell (or VS Code terminal)
+2. Navigate:
+   PS> cd C:\Users\Niharika\Desktop\AD
+   PS> cd frontend
+
+3. Install (first time only):
+   PS> npm install
+
+4. Run:
+   PS> npm run dev
+
+5. Wait for message:
+   "Local: http://localhost:5173/"
+
+✅ Frontend ready at: http://localhost:5173
+
+Browser auto-opens. If not: http://localhost:5173
+
+================================================================================
+STEP 6: LOGIN & TEST
+================================================================================
+1. Go to: http://localhost:5173
+2. Click "Login"
+3. Email: admin@earthcare.com
+4. Password: Password@123
+5. Click "Login"
+6. Should see Dashboard with stats
+
+✅ SUCCESS! App is working!
+
+================================================================================
+STEP 7: VERIFY API (Optional)
+================================================================================
+1. Go to: http://localhost:8080/swagger-ui.html
+2. See all API endpoints
+3. Try POST /api/v1/auth/login with demo credentials
+
+================================================================================
+STOP THE APP
+================================================================================
+1. Backend terminal: Press Ctrl+C
+2. Frontend terminal: Press Ctrl+C
+3. Stop MySQL: Get-Service MySQL80 | Stop-Service
+
+================================================================================
+TROUBLESHOOTING
+================================================================================
+
+PROBLEM: "mvn is not recognized"
+SOLUTION: Maven not installed or PATH not updated
+  → Install Maven (see STEP 1)
+  → Add to PATH (see WINDOWS_SETUP.md)
+  → Restart PowerShell
+  → Test: mvn -version
+
+PROBLEM: "java is not recognized"
+SOLUTION: Java not installed or PATH not updated
+  → Install Java 21 (see STEP 1)
+  → Restart PowerShell
+  → Test: java -version
+
+PROBLEM: "mysql: command not found"
+SOLUTION: Use Command Prompt (cmd.exe) not PowerShell
+  → Open Command Prompt
+  → mysql -u root -p
+
+PROBLEM: "Port 8080 already in use"
+SOLUTION: Kill process using port 8080
+  → PowerShell: Get-Process | Where-Object {$_.ProcessName -like "*java*"} | Stop-Process
+
+PROBLEM: "Cannot connect to database"
+SOLUTION: MySQL not running or wrong credentials
+  → Check: Get-Service MySQL80 (should be Running)
+  → Start: Start-Service MySQL80
+  → Verify credentials in application.properties
+
+PROBLEM: "npm packages not installed"
+SOLUTION: Reinstall node_modules
+  → cd frontend
+  → rm -r node_modules package-lock.json
+  → npm install
+
+================================================================================
+DEFAULT CREDENTIALS
+================================================================================
+Admin:
+  Email: admin@earthcare.com
+  Password: Password@123
+
+Users:
+  arjun@example.com / Password@123
+  priya@example.com / Password@123
+  rahul@example.com / Password@123
+  sneha@example.com / Password@123
+
+================================================================================
+IMPORTANT: USE COMMAND PROMPT FOR DATABASE COMMANDS
+================================================================================
+
+PowerShell issues with MySQL:
+  ❌ mysql -u root -p < file.sql   (PowerShell doesn't support <)
+  ✅ Use Command Prompt (cmd.exe)
+
+PowerShell works for:
+  ✅ mvn spring-boot:run
+  ✅ npm run dev
+  ✅ Maven/Java commands
+
+Or use VS Code Terminal (has proper support for all)
+
+================================================================================
+QUICK REFERENCE
+================================================================================
+Backend URL:         http://localhost:8080
+Frontend URL:        http://localhost:5173
+API Docs:            http://localhost:8080/swagger-ui.html
+Database:            localhost:3306 (MySQL)
+
+Backend folder:      C:\Users\Niharika\Desktop\AD\backend
+Frontend folder:     C:\Users\Niharika\Desktop\AD\frontend
+
+Build backend:       mvn clean install
+Run backend:         mvn spring-boot:run
+Install frontend:    npm install
+Run frontend:        npm run dev
+
+================================================================================
+YOU'RE READY! Follow steps above in order. 🚀
+================================================================================

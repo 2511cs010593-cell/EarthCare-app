@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clear Storage - EarthCare</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            text-align: center;
+            max-width: 500px;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 10px;
+            transition: transform 0.2s;
+        }
+        .btn:hover {
+            transform: scale(1.05);
+        }
+        .success {
+            color: #10b981;
+            font-size: 48px;
+            margin: 20px 0;
+            display: none;
+        }
+        .message {
+            color: #666;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧹 Clear Browser Storage</h1>
+        <p class="message">Click the button below to clear all saved user data and start fresh with 0 points.</p>
+        <button class="btn" onclick="clearStorage()">Clear Storage & Reload</button>
+        <div class="success" id="success">✅</div>
+        <p style="color: #999; font-size: 14px; margin-top: 30px;">
+            This will clear:<br>
+            • Saved login data<br>
+            • User points & coins<br>
+            • All cached data
+        </p>
+    </div>
+
+    <script>
+        function clearStorage() {
+            // Clear all storage
+            localStorage.clear();
+            sessionStorage.clear();
+            
+            // Show success
+            document.getElementById('success').style.display = 'block';
+            
+            // Redirect to home page after 1 second
+            setTimeout(() => {
+                window.location.href = '/';
+            }, 1000);
+        }
+    </script>
+</body>
+</html>

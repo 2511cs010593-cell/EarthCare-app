@@ -1,0 +1,354 @@
+================================================================================
+EARTH CARE APP - COPY & PASTE COMMANDS FOR WINDOWS
+================================================================================
+
+This file has ready-to-copy commands for Windows PowerShell & Command Prompt.
+
+================================================================================
+DATABASE SETUP (Use Command Prompt - cmd.exe)
+================================================================================
+
+COMMAND 1: Create Database
+----
+mysql -u root -p
+----
+Then type your MySQL password and paste:
+
+CREATE DATABASE earthcare_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+EXIT;
+
+COMMAND 2: Load Sample Data
+----
+mysql -u root -p earthcare_db < backend/src/main/resources/db/init.sql
+----
+Enter your MySQL password and wait for completion.
+
+COMMAND 3: Verify Database
+----
+mysql -u root -p earthcare_db
+SHOW TABLES;
+EXIT;
+----
+Should show 23 tables.
+
+================================================================================
+BACKEND SETUP & RUN (Use PowerShell)
+================================================================================
+
+COMMAND 1: Navigate to Backend
+----
+cd C:\Users\Niharika\Desktop\AD\backend
+----
+
+COMMAND 2: Update Config File
+----
+notepad src\main\resources\application.properties
+----
+Find: spring.datasource.password=root
+Change to your MySQL password
+Save and close
+
+COMMAND 3: Build Backend (First Time - Takes 3-5 minutes)
+----
+mvn clean install
+----
+Wait for: "BUILD SUCCESS"
+
+COMMAND 4: Run Backend
+----
+mvn spring-boot:run
+----
+Wait for: "Started EarthCareApplication in X.XXX seconds"
+
+Keep this window open!
+
+================================================================================
+FRONTEND SETUP & RUN (Use PowerShell - NEW WINDOW)
+================================================================================
+
+COMMAND 1: Navigate to Frontend
+----
+cd C:\Users\Niharika\Desktop\AD\frontend
+----
+
+COMMAND 2: Install Dependencies (First Time - Takes 2-3 minutes)
+----
+npm install
+----
+
+COMMAND 3: Run Frontend
+----
+npm run dev
+----
+Wait for: "Local:   http://localhost:5173/"
+
+Browser will auto-open or go to: http://localhost:5173
+
+================================================================================
+LOGIN & TEST
+================================================================================
+
+Go to: http://localhost:5173
+Click "Login"
+Email: admin@earthcare.com
+Password: Password@123
+Click "Login"
+
+Expected: Dashboard page with stats
+
+================================================================================
+VERIFY API (Optional)
+================================================================================
+
+Go to: http://localhost:8080/swagger-ui.html
+
+You should see API documentation with all endpoints.
+
+================================================================================
+STOP EVERYTHING
+================================================================================
+
+In PowerShell windows running backend/frontend:
+----
+Ctrl+C
+----
+
+In another PowerShell, stop MySQL:
+----
+Stop-Service MySQL80
+----
+
+================================================================================
+IF PROBLEMS - QUICK FIXES
+================================================================================
+
+Maven Not Found:
+1. Restart computer (not just PowerShell)
+2. Test: mvn -version
+3. If still fails, install Maven (see WINDOWS_SETUP.md)
+
+Java Not Found:
+1. Restart computer (not just PowerShell)
+2. Test: java -version
+3. If still fails, install Java 21 (see WINDOWS_SETUP.md)
+
+MySQL Commands Not Working:
+1. Use Command Prompt (cmd.exe) instead of PowerShell
+2. For PowerShell: mysql -u root -p (then enter password)
+
+Port 8080 Already In Use:
+1. Kill Java process:
+   Get-Process | Where-Object {$_.ProcessName -eq "java"} | Stop-Process -Force
+
+npm install hangs:
+1. Stop with Ctrl+C
+2. Clear cache: npm cache clean --force
+3. Try again: npm install
+
+================================================================================
+COMPLETE COMMAND SEQUENCE (Copy step by step)
+================================================================================
+
+FIRST TIME SETUP:
+
+[COMMAND PROMPT]
+mysql -u root -p
+CREATE DATABASE earthcare_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+EXIT;
+mysql -u root -p earthcare_db < backend/src/main/resources/db/init.sql
+
+
+[POWERSHELL - TERMINAL 1]
+cd C:\Users\Niharika\Desktop\AD\backend
+notepad src\main\resources\application.properties
+[Edit password and save]
+mvn clean install
+mvn spring-boot:run
+
+
+[POWERSHELL - TERMINAL 2]
+cd C:\Users\Niharika\Desktop\AD\frontend
+npm install
+npm run dev
+
+
+[BROWSER]
+http://localhost:5173
+Login: admin@earthcare.com / Password@123
+
+================================================================================
+EVERY TIME YOU RESTART
+================================================================================
+
+[TERMINAL 1 - PowerShell]
+cd C:\Users\Niharika\Desktop\AD\backend
+mvn spring-boot:run
+
+[TERMINAL 2 - PowerShell]  
+cd C:\Users\Niharika\Desktop\AD\frontend
+npm run dev
+
+[BROWSER]
+http://localhost:5173
+
+================================================================================
+USEFUL COMMANDS
+================================================================================
+
+Check Java installed:
+java -version
+
+Check Maven installed:
+mvn -version
+
+Check Node installed:
+node -version
+
+Check npm installed:
+npm -version
+
+Check MySQL service:
+Get-Service MySQL80
+
+Start MySQL:
+Start-Service MySQL80
+
+Stop MySQL:
+Stop-Service MySQL80
+
+List running processes on port:
+Get-NetTCPConnection -LocalPort 8080
+
+Kill process by name:
+Get-Process java | Stop-Process -Force
+
+Current location:
+pwd
+
+List files:
+ls
+
+Change directory:
+cd path
+
+Edit file:
+notepad filename
+
+================================================================================
+TESTING COMMANDS
+================================================================================
+
+Test Backend API (Command Prompt):
+curl -X POST http://localhost:8080/api/v1/auth/login ^
+  -H "Content-Type: application/json" ^
+  -d "{\"usernameOrEmail\":\"admin\",\"password\":\"Password@123\"}"
+
+Expected: Returns JWT token if backend working
+
+Test Frontend:
+http://localhost:5173
+
+Expected: Home page loads, can login
+
+================================================================================
+DEFAULT TEST CREDENTIALS
+================================================================================
+
+Admin User:
+  Email: admin@earthcare.com
+  Username: admin
+  Password: Password@123
+  Points: 5000
+
+User 1:
+  Email: arjun@example.com
+  Username: arjun
+  Password: Password@123
+  Points: 1200
+
+User 2:
+  Email: priya@example.com
+  Username: priya
+  Password: Password@123
+  Points: 800
+
+User 3:
+  Email: rahul@example.com
+  Username: rahul
+  Password: Password@123
+  Points: 450
+
+User 4:
+  Email: sneha@example.com
+  Username: sneha
+  Password: Password@123
+  Points: 200
+
+================================================================================
+SUCCESS INDICATORS
+================================================================================
+
+✅ Backend Running:
+   → "Started EarthCareApplication in X.XXX seconds"
+   → http://localhost:8080/swagger-ui.html loads
+
+✅ Frontend Running:
+   → "Local: http://localhost:5173/"
+   → Browser opens to http://localhost:5173
+
+✅ Database Connected:
+   → Backend doesn't crash on startup
+   → Swagger UI loads all endpoints
+
+✅ Login Working:
+   → Can login with admin@earthcare.com
+   → Redirects to dashboard
+   → Dashboard shows stats
+
+✅ App Working:
+   → Can navigate pages
+   → Dark mode toggle works
+   → API calls succeed (check Network tab)
+
+================================================================================
+TROUBLESHOOTING CHECKLIST
+================================================================================
+
+Before running, verify:
+☐ Java 21 installed (java -version)
+☐ Maven 3.9+ installed (mvn -version)
+☐ MySQL running (Get-Service MySQL80)
+☐ Node.js 20+ installed (node -version)
+☐ npm installed (npm -version)
+☐ Database created (mysql shows 23 tables)
+☐ application.properties has correct MySQL password
+☐ Port 8080 not in use
+☐ Port 5173 not in use
+☐ Port 3306 not in use (MySQL)
+
+================================================================================
+READY? FOLLOW THESE STEPS IN ORDER
+================================================================================
+
+1. Open Command Prompt
+   → Create database
+   → Load sample data
+
+2. Open PowerShell Terminal 1
+   → cd backend
+   → mvn clean install (wait 3-5 min)
+   → mvn spring-boot:run
+
+3. Open PowerShell Terminal 2
+   → cd frontend
+   → npm install (wait 2-3 min first time)
+   → npm run dev
+
+4. Go to http://localhost:5173
+   → Click Login
+   → admin@earthcare.com / Password@123
+   → See Dashboard
+
+DONE! 🚀
+
+================================================================================
