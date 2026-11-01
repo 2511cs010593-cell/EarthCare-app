@@ -169,12 +169,25 @@ const EventsPage = () => {
               <p className="text-sm text-gray-600">📍 Location: {selectedEvent.location}</p>
               <p className="text-sm text-gray-600 mt-2 font-semibold text-green-700">See you there!</p>
             </div>
-            <button
-              onClick={() => setShowSuccess(false)}
-              className="w-full bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700 text-white px-6 py-3 rounded-lg font-semibold transition-all"
-            >
-              Continue
-            </button>
+            <div className="flex gap-3">
+              <button
+                onClick={() => setShowSuccess(false)}
+                className="flex-1 px-6 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 font-semibold transition-colors"
+              >
+                Close
+              </button>
+              <a
+                href={`https://www.google.com/search?q=${encodeURIComponent(selectedEvent.title + ' ' + selectedEvent.location)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex-1 bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700 text-white px-6 py-3 rounded-lg font-semibold transition-all flex items-center justify-center gap-2"
+              >
+                View Event
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                </svg>
+              </a>
+            </div>
           </div>
         </div>
       )}
