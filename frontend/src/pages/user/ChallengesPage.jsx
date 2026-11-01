@@ -1,6 +1,11 @@
 import React, { useState } from 'react'
 
 const ChallengesPage = () => {
+  const [selectedChallenge, setSelectedChallenge] = useState(null)
+  const [showForm, setShowForm] = useState(false)
+  const [showSuccess, setShowSuccess] = useState(false)
+  const [formData, setFormData] = useState({ fullName: '', email: '', phone: '' })
+
   const [challenges] = useState([
     { id: 1, title: "Zero Waste Week", description: "Go one week without producing waste", points: 500, duration: "7 days", participants: 234, difficulty: "Medium", icon: "🗑️", active: true },
     { id: 2, title: "Plant 10 Trees", description: "Contribute to reforestation by planting trees", points: 1000, duration: "30 days", participants: 567, difficulty: "Hard", icon: "🌳", active: true },
@@ -14,9 +19,19 @@ const ChallengesPage = () => {
     { id: 10, title: "Eco Home Makeover", description: "Make your home more eco-friendly", points: 1500, duration: "90 days", participants: 67, difficulty: "Hard", icon: "🏡", active: true }
   ])
 
-  const handleJoinChallenge = (challengeId) => {
-    const challenge = challenges.find(c => c.id === challengeId)
-    alert(`🎉 You joined "${challenge.title}"! Complete it to earn ${challenge.points} points!`)
+  const handleJoinChallenge = (challenge) => {
+    setSelectedChallenge(challenge)
+    setShowForm(true)
+  }
+
+  const handleSubmitForm = (e) => {
+    e.preventDefault()
+    setShowForm(false)
+    setShowSuccess(true)
+    setTimeout(() => {
+      setShowSuccess(false)
+      setFormData({ fullName: '', email: '', phone: '' })
+    }, 3000)
   }
 
   const getDifficultyColor = (difficulty) => {
@@ -93,7 +108,7 @@ const ChallengesPage = () => {
                 </div>
 
                 <button
-                  onClick={() => handleJoinChallenge(challenge.id)}
+                  onClick={() => handleJoinChallenge(challenge)}
                   className="w-full bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700 text-white py-3 px-4 rounded-lg font-semibold transition-all transform hover:scale-105 shadow-lg"
                 >
                   Join Challenge
@@ -103,6 +118,93 @@ const ChallengesPage = () => {
           ))}
         </div>
       </div>
+
+      {/* Registration Form Modal */}
+      {showForm && selectedChallenge && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-2xl max-w-md w-full shadow-2xl">
+            <div className="bg-gradient-to-r from-green-600 to-blue-600 text-white p-6 rounded-t-2xl">
+              <h2 className="text-2xl font-bold">Join Challenge</h2>
+              <p className="text-sm opacity-90 mt-1">{selectedChallenge.title}</p>
+            </div>
+            <form onSubmit={handleSubmitForm} className="p-6 space-y-4">
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">Full Name</label>
+                <input
+                  type="text"
+                  required
+                  value={formData.fullName}
+                  onChange={(e) => setFormData({...formData, fullName: e.target.value})}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                  placeholder="Enter your full name"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">Email</label>
+                <input
+                  type="email"
+                  required
+                  value={formData.email}
+                  onChange={(e) => setFormData({...formData, email: e.target.value})}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                  placeholder="Enter your email"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">Phone Number</label>
+                <input
+                  type="tel"
+                  required
+                  value={formData.phone}
+                  onChange={(e) => setFormData({...formData, phone: e.target.value})}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                  placeholder="Enter your phone number"
+                />
+              </div>
+              <div className="flex gap-3 mt-6">
+                <button
+                  type="button"
+                  onClick={() => setShowForm(false)}
+                  className="flex-1 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 font-semibold transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="flex-1 bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700 text-white px-4 py-2 rounded-lg font-semibold transition-all"
+                >
+                  Register
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Success Modal */}
+      {showSuccess && selectedChallenge && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-2xl max-w-md w-full shadow-2xl p-8 text-center">
+            <div className="text-6xl mb-4">🎉</div>
+            <h2 className="text-2xl font-bold text-gray-900 mb-2">Successfully Registered!</h2>
+            <p className="text-gray-600 mb-4">
+              You have successfully registered for <span className="font-semibold text-green-600">{selectedChallenge.title}</span>
+            </p>
+            <div className="bg-green-50 border border-green-200 rounded-lg p-4 mb-4">
+              <p className="text-sm text-gray-700">
+                <span className="font-semibold">Challenge Participation</span><br />
+                Complete the challenge to earn {selectedChallenge.points} points!
+              </p>
+            </div>
+            <button
+              onClick={() => setShowSuccess(false)}
+              className="w-full bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700 text-white px-6 py-3 rounded-lg font-semibold transition-all"
+            >
+              Continue
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

@@ -1,6 +1,11 @@
 import React, { useState } from 'react'
 
 const EventsPage = () => {
+  const [selectedEvent, setSelectedEvent] = useState(null)
+  const [showForm, setShowForm] = useState(false)
+  const [showSuccess, setShowSuccess] = useState(false)
+  const [formData, setFormData] = useState({ fullName: '', email: '', phone: '' })
+
   const [events, setEvents] = useState([
     { id: 1, title: "Community Tree Planting", date: "2026-10-15", location: "Central Park", seats: 25, icon: "🌳", registered: false },
     { id: 2, title: "Beach Cleanup Drive", date: "2026-10-20", location: "Marina Beach", seats: 50, icon: "🏖️", registered: false },
@@ -8,17 +13,26 @@ const EventsPage = () => {
     { id: 4, title: "Solar Energy Seminar", date: "2026-11-01", location: "Green Building", seats: 40, icon: "☀️", registered: false }
   ])
 
-  const handleRegister = (eventId) => {
+  const handleRegister = (event) => {
+    setSelectedEvent(event)
+    setShowForm(true)
+  }
+
+  const handleSubmitForm = (e) => {
+    e.preventDefault()
     setEvents(prevEvents => 
-      prevEvents.map(event => 
-        event.id === eventId 
-          ? { ...event, registered: true, seats: event.seats - 1 }
-          : event
+      prevEvents.map(evt => 
+        evt.id === selectedEvent.id 
+          ? { ...evt, registered: true, seats: evt.seats - 1 }
+          : evt
       )
     )
-    
-    const event = events.find(e => e.id === eventId)
-    alert(`🎉 Successfully registered for ${event.title}! See you there!`)
+    setShowForm(false)
+    setShowSuccess(true)
+    setTimeout(() => {
+      setShowSuccess(false)
+      setFormData({ fullName: '', email: '', phone: '' })
+    }, 3000)
   }
 
   return (
@@ -55,7 +69,7 @@ const EventsPage = () => {
                 </button>
               ) : (
                 <button 
-                  onClick={() => handleRegister(event.id)}
+                  onClick={() => handleRegister(event)}
                   className="w-full bg-green-600 hover:bg-green-700 text-white py-3 px-4 rounded-lg transition-all transform hover:scale-105 shadow-lg"
                 >
                   Register Now
@@ -75,6 +89,95 @@ const EventsPage = () => {
           </button>
         </div>
       </div>
+
+      {/* Registration Form Modal */}
+      {showForm && selectedEvent && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-2xl max-w-md w-full shadow-2xl">
+            <div className="bg-gradient-to-r from-green-600 to-blue-600 text-white p-6 rounded-t-2xl">
+              <h2 className="text-2xl font-bold">Register for Event</h2>
+              <p className="text-sm opacity-90 mt-1">{selectedEvent.title}</p>
+            </div>
+            <form onSubmit={handleSubmitForm} className="p-6 space-y-4">
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">Full Name</label>
+                <input
+                  type="text"
+                  required
+                  value={formData.fullName}
+                  onChange={(e) => setFormData({...formData, fullName: e.target.value})}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                  placeholder="Enter your full name"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">Email</label>
+                <input
+                  type="email"
+                  required
+                  value={formData.email}
+                  onChange={(e) => setFormData({...formData, email: e.target.value})}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                  placeholder="Enter your email"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">Phone Number</label>
+                <input
+                  type="tel"
+                  required
+                  value={formData.phone}
+                  onChange={(e) => setFormData({...formData, phone: e.target.value})}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                  placeholder="Enter your phone number"
+                />
+              </div>
+              <div className="flex gap-3 mt-6">
+                <button
+                  type="button"
+                  onClick={() => setShowForm(false)}
+                  className="flex-1 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 font-semibold transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="flex-1 bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700 text-white px-4 py-2 rounded-lg font-semibold transition-all"
+                >
+                  Register
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Success Modal */}
+      {showSuccess && selectedEvent && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-2xl max-w-md w-full shadow-2xl p-8 text-center">
+            <div className="text-6xl mb-4">🎉</div>
+            <h2 className="text-2xl font-bold text-gray-900 mb-2">Successfully Registered!</h2>
+            <p className="text-gray-600 mb-4">
+              You have successfully registered for <span className="font-semibold text-green-600">{selectedEvent.title}</span>
+            </p>
+            <div className="bg-green-50 border border-green-200 rounded-lg p-4 mb-4 text-left">
+              <p className="text-sm text-gray-700 mb-2">
+                <span className="font-semibold">Event Details:</span>
+              </p>
+              <p className="text-sm text-gray-600">📅 Date: {new Date(selectedEvent.date).toLocaleDateString()}</p>
+              <p className="text-sm text-gray-600">📍 Location: {selectedEvent.location}</p>
+              <p className="text-sm text-gray-600 mt-2 font-semibold text-green-700">See you there!</p>
+            </div>
+            <button
+              onClick={() => setShowSuccess(false)}
+              className="w-full bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700 text-white px-6 py-3 rounded-lg font-semibold transition-all"
+            >
+              Continue
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
