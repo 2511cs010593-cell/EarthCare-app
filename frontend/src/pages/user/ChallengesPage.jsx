@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 const ChallengesPage = () => {
+  const navigate = useNavigate()
   const [selectedChallenge, setSelectedChallenge] = useState(null)
   const [showForm, setShowForm] = useState(false)
   const [showSuccess, setShowSuccess] = useState(false)
@@ -203,15 +205,15 @@ const ChallengesPage = () => {
               >
                 Close
               </button>
-              <a
-                href="/community"
+              <button
+                onClick={() => navigate(`/challenge/${selectedChallenge.id}`)}
                 className="flex-1 bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700 text-white px-6 py-3 rounded-lg font-semibold transition-all flex items-center justify-center gap-2"
               >
-                View Community
+                View Challenge
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
                 </svg>
-              </a>
+              </button>
             </div>
           </div>
         </div>

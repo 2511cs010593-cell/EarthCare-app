@@ -27,6 +27,7 @@ import RewardsPage from './pages/user/RewardsPage'
 import TreePlantationPage from './pages/user/TreePlantationPage'
 import WasteReportPage from './pages/user/WasteReportPage'
 import ChallengesPage from './pages/user/ChallengesPage'
+import ChallengeDetailPage from './pages/user/ChallengeDetailPage'
 import PollutionPage from './pages/user/PollutionPage'
 import CommunityPage from './pages/user/CommunityPage'
 import PostDetailPage from './pages/user/PostDetailPage'
@@ -75,6 +76,7 @@ const App = () => {
                   <Route path="/tree" element={<TreePlantationPage />} />
                   <Route path="/waste" element={<WasteReportPage />} />
                   <Route path="/challenges" element={<ChallengesPage />} />
+                  <Route path="/challenge/:id" element={<ChallengeDetailPage />} />
                   <Route path="/pollution" element={<PollutionPage />} />
                   <Route path="/community" element={<CommunityPage />} />
                   <Route path="/community/:id" element={<PostDetailPage />} />
