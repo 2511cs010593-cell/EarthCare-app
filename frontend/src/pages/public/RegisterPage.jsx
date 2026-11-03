@@ -7,7 +7,7 @@ const RegisterPage = () => {
   const { register, login } = useContext(AuthContext)
   const [formData, setFormData] = useState({
     fullName: '',
-    username: '',
+    email: '',
     mobileNumber: '',
     password: '',
     confirmPassword: ''
@@ -25,8 +25,21 @@ const RegisterPage = () => {
     e.preventDefault()
     
     // Basic validation
-    if (!formData.fullName || !formData.username || !formData.password) {
+    if (!formData.fullName || !formData.email || !formData.password) {
       alert('Please fill in all required fields!')
+      return
+    }
+    
+    // Validate Gmail address
+    if (!formData.email.endsWith('@gmail.com')) {
+      alert('Please enter a valid Gmail address (must end with @gmail.com)')
+      return
+    }
+    
+    // Validate email format
+    const emailRegex = /^[a-zA-Z0-9._-]+@gmail\.com$/
+    if (!emailRegex.test(formData.email)) {
+      alert('Please enter a valid Gmail address')
       return
     }
     
@@ -48,7 +61,7 @@ const RegisterPage = () => {
       
       // Automatically log in after registration
       await login({
-        usernameOrEmail: formData.username,
+        usernameOrEmail: formData.email,
         password: formData.password,
         rememberMe: false
       })
@@ -88,11 +101,11 @@ const RegisterPage = () => {
             </div>
             <div>
               <input
-                type="text"
-                name="username"
-                value={formData.username}
+                type="email"
+                name="email"
+                value={formData.email}
                 onChange={handleChange}
-                placeholder="Username"
+                placeholder="Gmail Address (e.g., yourname@gmail.com)"
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
                 required
               />
