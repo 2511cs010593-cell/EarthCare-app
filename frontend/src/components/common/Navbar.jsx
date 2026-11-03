@@ -60,9 +60,12 @@ const Navbar = () => {
             <Link to="/contact" className="text-gray-700 hover:text-green-600 transition-colors font-medium">
               Contact
             </Link>
-            <Link to="/admin/dashboard" className="text-blue-600 hover:text-blue-700 transition-colors font-medium">
-              Admin
-            </Link>
+            {/* Show Admin link only for users with admin role */}
+            {isAuthenticated && user?.roles?.includes('ROLE_ADMIN') && (
+              <Link to="/admin/dashboard" className="text-blue-600 hover:text-blue-700 transition-colors font-medium">
+                Admin
+              </Link>
+            )}
           </div>
 
           {/* Auth Buttons */}
@@ -122,7 +125,10 @@ const Navbar = () => {
               <Link to="/news" className="block px-4 py-2 text-gray-700 hover:bg-green-50 rounded transition-colors">News</Link>
               <Link to="/community" className="block px-4 py-2 text-gray-700 hover:bg-green-50 rounded transition-colors">Community</Link>
               <Link to="/contact" className="block px-4 py-2 text-gray-700 hover:bg-green-50 rounded transition-colors">Contact</Link>
-              <Link to="/admin/dashboard" className="block px-4 py-2 text-blue-600 hover:bg-blue-50 rounded transition-colors">Admin</Link>
+              {/* Show Admin link only for users with admin role */}
+              {isAuthenticated && user?.roles?.includes('ROLE_ADMIN') && (
+                <Link to="/admin/dashboard" className="block px-4 py-2 text-blue-600 hover:bg-blue-50 rounded transition-colors">Admin</Link>
+              )}
               <hr className="my-2" />
               {!isAuthenticated ? (
                 <>
