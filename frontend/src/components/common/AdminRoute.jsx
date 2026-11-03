@@ -35,8 +35,54 @@ const AdminRoute = () => {
   
   const isAdmin = isAuthenticated && user?.roles?.includes('ROLE_ADMIN')
   
+  // If not authenticated at all, ask them to login first
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center p-4">
+        <div className="bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full text-center">
+          <div className="text-6xl mb-4">🔒</div>
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">Admin Access Required</h2>
+          <p className="text-gray-600 mb-6">Please login with admin credentials to access this area.</p>
+          <button
+            onClick={() => window.location.href = '/login'}
+            className="w-full bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700 text-white px-6 py-3 rounded-lg font-semibold transition-all"
+          >
+            Go to Login
+          </button>
+        </div>
+      </div>
+    )
+  }
+  
+  // If authenticated but not admin, show access denied
   if (!isAdmin) {
-    return <Navigate to="/dashboard" replace />
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center p-4">
+        <div className="bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full text-center">
+          <div className="text-6xl mb-4">⛔</div>
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">Access Denied</h2>
+          <p className="text-gray-600 mb-6">You need admin privileges to access this area. Please login with admin password (1234567890).</p>
+          <div className="flex gap-3">
+            <button
+              onClick={() => window.location.href = '/dashboard'}
+              className="flex-1 px-4 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 font-semibold transition-colors"
+            >
+              Go to Dashboard
+            </button>
+            <button
+              onClick={() => {
+                localStorage.clear();
+                sessionStorage.clear();
+                window.location.href = '/login';
+              }}
+              className="flex-1 bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700 text-white px-4 py-3 rounded-lg font-semibold transition-all"
+            >
+              Login as Admin
+            </button>
+          </div>
+        </div>
+      </div>
+    )
   }
   
   const handlePasswordSubmit = (e) => {
