@@ -4,7 +4,7 @@ import { AuthContext } from '../../context/AuthContext'
 
 const RegisterPage = () => {
   const navigate = useNavigate()
-  const { register } = useContext(AuthContext)
+  const { register, login } = useContext(AuthContext)
   const [formData, setFormData] = useState({
     fullName: '',
     username: '',
@@ -45,8 +45,17 @@ const RegisterPage = () => {
     try {
       // Use the AuthContext register function (demo mode)
       await register(formData)
-      alert('🎉 Registration successful! Welcome to EarthCare! Please log in.')
-      navigate('/login')
+      
+      // Automatically log in after registration
+      await login({
+        usernameOrEmail: formData.username,
+        password: formData.password,
+        rememberMe: false
+      })
+      
+      alert('🎉 Registration successful! Welcome to EarthCare!')
+      // Redirect to tasks page instead of login
+      navigate('/tasks')
     } catch (error) {
       console.error('Registration error:', error)
       alert('Registration failed. Please try again.')

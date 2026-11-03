@@ -84,8 +84,8 @@ const App = () => {
                   <Route path="/plastic-tracker" element={<PlasticTrackerPage />} />
                 </Route>
 
-                {/* Protected Admin Pages - Require Login */}
-                <Route element={<ProtectedRoute />}>
+                {/* Protected Admin Pages - Require Login AND Admin Password */}
+                <Route element={<AdminRoute />}>
                   <Route path="/admin/dashboard" element={<AdminDashboardPage />} />
                   <Route path="/admin/users" element={<AdminUsersPage />} />
                   <Route path="/admin/rewards" element={<AdminRewardsPage />} />
