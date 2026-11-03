@@ -2,7 +2,7 @@ import React, { useState, useContext } from 'react'
 import { AuthContext } from '../../context/AuthContext'
 
 const TasksPage = () => {
-  const { user } = useContext(AuthContext)
+  const { user, updateUserPoints } = useContext(AuthContext)
   
   const [tasks, setTasks] = useState([
     { id: 1, title: "Use Public Transport", description: "Take bus/train instead of car", points: 50, icon: "🚌", completed: false },
@@ -14,13 +14,21 @@ const TasksPage = () => {
   ])
 
   const handleCompleteTask = (taskId) => {
-    setTasks(prevTasks => 
-      prevTasks.map(task => 
-        task.id === taskId ? { ...task, completed: true } : task
-      )
-    )
-    // Show success message
-    alert(`🎉 Task completed! You earned ${tasks.find(t => t.id === taskId)?.points} points!`)
+    const task = tasks.find(t => t.id === taskId);
+    if (task && !task.completed) {
+      // Award points and coins (coins = points / 2)
+      updateUserPoints(task.points, Math.floor(task.points / 2));
+      
+      // Mark task as completed
+      setTasks(prevTasks => 
+        prevTasks.map(t => 
+          t.id === taskId ? { ...t, completed: true } : t
+        )
+      );
+      
+      // Show success message
+      alert(`🎉 Task completed! You earned ${task.points} points and ${Math.floor(task.points / 2)} coins!`);
+    }
   }
 
   const completedToday = tasks.filter(t => t.completed).length

@@ -2,15 +2,13 @@ import React, { useState, useContext } from 'react'
 import { AuthContext } from '../../context/AuthContext'
 
 const RewardsPage = () => {
-  const { user } = useContext(AuthContext)
+  const { user, updateUserPoints } = useContext(AuthContext)
   
-  // Get user stats from context or default to 0
-  const [userStats, setUserStats] = useState({ 
-    points: user?.totalPoints || 0, 
-    coins: user?.greenCoins || 0, 
-    level: user?.level || 1, 
-    streak: user?.streak || 0 
-  })
+  // Get user stats from context - no local state needed, read directly
+  const userPoints = user?.totalPoints || 0
+  const userCoins = user?.greenCoins || 0
+  const userLevel = user?.level || 1
+  const userStreak = user?.streak || 0
   
   const badges = [
     { name: "Bronze", tier: "BRONZE", earned: false, icon: "🥉" },
@@ -28,12 +26,13 @@ const RewardsPage = () => {
   ]
 
   const handleRedeemReward = (rewardId, cost) => {
-    if (userStats.coins >= cost) {
-      setUserStats(prev => ({ ...prev, coins: prev.coins - cost }))
+    if (userCoins >= cost) {
+      // Deduct coins by adding negative coins
+      updateUserPoints(0, -cost)
       const reward = rewards.find(r => r.id === rewardId)
       alert(`🎉 Successfully redeemed ${reward.name}! You spent ${cost} coins.`)
     } else {
-      alert(`❌ Not enough coins! You need ${cost} coins but only have ${userStats.coins}.`)
+      alert(`❌ Not enough coins! You need ${cost} coins but only have ${userCoins}.`)
     }
   }
 
@@ -47,19 +46,19 @@ const RewardsPage = () => {
           <h2 className="text-xl font-bold mb-4">Your Stats</h2>
           <div className="grid md:grid-cols-4 gap-6">
             <div className="text-center p-4 bg-green-50 rounded-lg transform hover:scale-105 transition-all">
-              <div className="text-3xl text-green-600 font-bold animate-pulse-slow">{userStats.points}</div>
+              <div className="text-3xl text-green-600 font-bold animate-pulse-slow">{userPoints}</div>
               <div className="text-gray-600">Total Points</div>
             </div>
             <div className="text-center p-4 bg-yellow-50 rounded-lg transform hover:scale-105 transition-all">
-              <div className="text-3xl text-yellow-600 font-bold animate-bounce-slow">{userStats.coins}</div>
+              <div className="text-3xl text-yellow-600 font-bold animate-bounce-slow">{userCoins}</div>
               <div className="text-gray-600">Green Coins</div>
             </div>
             <div className="text-center p-4 bg-blue-50 rounded-lg transform hover:scale-105 transition-all">
-              <div className="text-3xl text-blue-600 font-bold">{userStats.level}</div>
+              <div className="text-3xl text-blue-600 font-bold">{userLevel}</div>
               <div className="text-gray-600">Level</div>
             </div>
             <div className="text-center p-4 bg-red-50 rounded-lg transform hover:scale-105 transition-all">
-              <div className="text-3xl text-red-600 font-bold">{userStats.streak}</div>
+              <div className="text-3xl text-red-600 font-bold">{userStreak}</div>
               <div className="text-gray-600">Day Streak</div>
             </div>
           </div>
@@ -95,12 +94,12 @@ const RewardsPage = () => {
                 <button 
                   onClick={() => handleRedeemReward(reward.id, reward.cost)}
                   className={`w-full py-2 px-4 rounded-lg transition-all transform hover:scale-105 ${
-                    userStats.coins >= reward.cost 
+                    userCoins >= reward.cost 
                       ? 'bg-green-600 hover:bg-green-700 text-white shadow-lg' 
                       : 'bg-gray-300 text-gray-500 cursor-not-allowed'
                   }`}
                 >
-                  {userStats.coins >= reward.cost ? 'Redeem Now' : 'Not Enough Coins'}
+                  {userCoins >= reward.cost ? 'Redeem Now' : 'Not Enough Coins'}
                 </button>
               </div>
             ))}

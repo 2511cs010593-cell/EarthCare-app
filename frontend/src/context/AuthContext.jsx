@@ -169,6 +169,28 @@ export const AuthProvider = ({ children }) => {
     }
   }, [user]);
 
-  const value = { user, accessToken, isAuthenticated, loading, register, login, logout, refreshUser };
+  const updateUserPoints = useCallback((pointsToAdd, coinsToAdd = 0) => {
+    setUser(prevUser => {
+      const updatedUser = {
+        ...prevUser,
+        totalPoints: (prevUser.totalPoints || 0) + pointsToAdd,
+        greenCoins: (prevUser.greenCoins || 0) + coinsToAdd,
+        tasksCompleted: (prevUser.tasksCompleted || 0) + 1
+      };
+      
+      // Save to storage
+      const token = localStorage.getItem("accessToken");
+      const storageKey = "demoUser";
+      if (token) {
+        localStorage.setItem(storageKey, JSON.stringify(updatedUser));
+      } else {
+        sessionStorage.setItem(storageKey, JSON.stringify(updatedUser));
+      }
+      
+      return updatedUser;
+    });
+  }, []);
+
+  const value = { user, accessToken, isAuthenticated, loading, register, login, logout, refreshUser, updateUserPoints };
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
